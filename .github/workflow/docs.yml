@@ -19,6 +19,6 @@ jobs:
         run: |
           make docs
       - name: Deploy to GitHub Pages
-        uses: actions/upload-pages@v1
+        uses: actions/github-pages@v1
         with:
           directory: docs
