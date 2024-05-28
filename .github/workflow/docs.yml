@@ -1,44 +1,33 @@
-# Workflow для генерации и деплоя документации на GitHub Pages
-name: Deploy Documentation to Pages
+# This workflow will build and deploy documentation using Doxygen
+
+name: Deploy Docs
 
 on:
-  # Runs on pushes targeting the default branch
+  # Trigger the workflow on push to main branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Install Doxygen
-      - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install doxygen
+      # Install Doxygen and Graphviz
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y doxygen graphviz
 
-      # Generate documentation using Doxygen
-      - name: Generate documentation
-        run: doxygen Doxyfile
+      # Generate Doxygen documentation
+      - name: Generate docs
+        run: doxygen
 
-      # Make the documentation directory
-      - name: Make documentation directory
-        run: mkdir -p docs/html
-
-      # Copy the generated documentation to the docs directory
-      - name: Copy documentation
-        run: cp -r html/* docs/html/
-
-      - name: Deploy to GitHub Pages
-        uses: github/pages@v3
+      # Deploy documentation to GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          out_dir: 'docs/html'
-          github_token: ${{ github.token }}
-          repository_name: sh77ma/calcdef
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html
