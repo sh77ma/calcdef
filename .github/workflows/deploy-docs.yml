@@ -1,44 +1,45 @@
-# Workflow for building Doxygen documentation and deploying to GitHub Pages
-name: Deploy Docs
+# Simple workflow for deploying Doxygen documentation to GitHub Pages
+name: Deploy Docs to Pages
 
 on:
-  # Trigger on push to the main branch
   push:
-    branches: [ main ]
+    branches: ["main"]
+  workflow_dispatch:
 
-# Grant GITHUB_TOKEN the necessary permissions 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      # Install Doxygen and Graphviz
-      - name: Install dependencies
+      # Install Doxygen and Graphviz (for diagrams)
+      - name: Install Doxygen
         run: |
-          sudo apt-get update -y
+          sudo apt-get update
           sudo apt-get install -y doxygen graphviz
 
-      # Generate Doxygen documentation using your dox.dox file
-      - name: Generate docs
-        run: doxygen dox.dox
+      # Generate Doxygen documentation
+      - name: Create documentation     
+        run: doxygen 
 
-      # Upload documentation to GitHub Pages artifact
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # Deploy to GitHub Pages (assuming docs are in ./html)
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
         with:
-          # Specify the directory containing the documentation
-          path: ./html
-
-      # Deploy to GitHub Pages
-      - name: Deploy
-        uses: actions/deploy-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          folder: html 
