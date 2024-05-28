@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          repo: calcdef
 
       # Install Doxygen
       - name: Install Doxygen
@@ -38,20 +36,9 @@ jobs:
       - name: Copy documentation
         run: cp -r html/* docs/html/
 
-      - name: Set repository URL
-        env:
-          REPOSITORY_URL: https://github.com/sh77ma/calcdef
-        run: |
-          echo "REPOSITORY_URL=$REPOSITORY_URL" >> $GITHUB_ENV
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './docs/html'
-
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: github/pages@v3
         with:
-          repository_url: https://github.com/sh77ma/calcdef
           out_dir: 'docs/html'
+          github_token: ${{ github.token }}
+          repository_name: sh77ma/calcdef
