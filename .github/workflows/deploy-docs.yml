@@ -1,0 +1,38 @@
+# Workflow for building Doxygen documentation and deploying to GitHub Pages
+name: Deploy Docs
+
+on:
+  # Trigger on push to the main branch
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Install Doxygen and Graphviz
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y doxygen graphviz
+
+      # Generate Doxygen documentation
+      - name: Generate docs
+        run: doxygen
+
+      # Upload documentation to GitHub Pages artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Specify the directory containing the documentation
+          path: ./html
+
+      # Deploy to GitHub Pages
+      - name: Deploy
+        uses: actions/deploy-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
