@@ -9,18 +9,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   # Single deploy job since we're just deploying
   deploy:
@@ -31,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          repo: calcdef
 
       # Install Doxygen
       - name: Install Doxygen
@@ -48,6 +38,12 @@ jobs:
       - name: Copy documentation
         run: cp -r html/* docs/html/
 
+      - name: Set repository URL
+        env:
+          REPOSITORY_URL: https://github.com/sh77ma/calcdef
+        run: |
+          echo "REPOSITORY_URL=$REPOSITORY_URL" >> $GITHUB_ENV
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -57,5 +53,5 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository_url: https://github.com/sh77ma/calcdef
           out_dir: 'docs/html'
