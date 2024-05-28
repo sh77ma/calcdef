@@ -43,7 +43,7 @@ jobs:
         
       # Create documentation   
       - name: Create documentation     
-        run: doxygen dox.dox
+        run: doxygen ./dox.dox
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
