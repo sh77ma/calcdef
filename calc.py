@@ -6,11 +6,13 @@ class Calculator(QtWidgets.QWidget):
     """
     Простой калькулятор с графическим интерфейсом на PyQt5.
 
-    Attributes:
-        label (QtWidgets.QLabel): Поле для отображения ввода и результата.
+    :param label: Поле для отображения ввода и результата.
+    :type label: QtWidgets.QLabel
     """
     def __init__(self):
-        """Инициализирует калькулятор и создает его интерфейс."""
+        """
+        Инициализирует калькулятор и создает его интерфейс.
+        """
         super().__init__()
 
         self.setWindowTitle("Калькулятор")
@@ -24,7 +26,9 @@ class Calculator(QtWidgets.QWidget):
         self.create_buttons()
 
     def create_buttons(self):
-        """Создает кнопки калькулятора и размещает их на интерфейсе."""
+        """
+        Создает кнопки калькулятора и размещает их на интерфейсе.
+        """
         button_list = [
             'C', '', '⌫', '/',
             '7', '8', '9', '*',
@@ -45,7 +49,9 @@ class Calculator(QtWidgets.QWidget):
                 row += 1
 
     def button_clicked(self):
-        """Обрабатывает нажатия на кнопки калькулятора."""
+        """
+        Обрабатывает нажатия на кнопки калькулятора.
+        """
         button = self.sender()
         text = button.text()
 
