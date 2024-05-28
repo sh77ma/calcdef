@@ -22,7 +22,7 @@ jobs:
 
       # Generate Doxygen documentation
       - name: Generate docs
-        run: doxygen
+        run: doxygen dox.dox
 
       # Upload documentation to GitHub Pages artifact
       - name: Upload artifact
